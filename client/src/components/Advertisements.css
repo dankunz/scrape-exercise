@@ -1,0 +1,35 @@
+.advertisements-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.advertisements {
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap;
+    align-items: center;
+}
+.per-page-select {
+    padding: 10px;
+    border:none;
+    color: white;
+    background: #3a3aee;
+    border: none;
+    font-weight: 600;
+    border-radius: 5px;
+}
+.top-bar {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+}
+.no-data {
+    width: 100%;
+    height: 30rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #cd4d4d;
+}
+

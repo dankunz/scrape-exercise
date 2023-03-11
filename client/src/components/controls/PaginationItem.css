@@ -1,0 +1,24 @@
+.pagiantion-items {
+    display: flex;
+    margin: 2rem;
+}
+.pagination-item {
+    background-color: #3a3aee;;
+    border-radius: 5px;
+    border: 1px solid #3a3aee;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0.3rem;
+    margin: 0.2rem;
+    cursor: pointer;
+    color: white;
+}
+.pagination-item:hover {
+    color: #3a3aee;;
+    background-color: white;
+
+}
+.active {
+    color: #3a3aee;;
+    background-color: white;
+}
