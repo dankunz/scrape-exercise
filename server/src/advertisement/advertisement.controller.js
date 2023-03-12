@@ -45,11 +45,18 @@ export const deleteDataHandler = (req, res) => {
 
 export const scrapePageHandler = async (req, res) => {
   const house = req.query.type === "house";
-  console.log("house", house);
-  console.log("house", req.query);
-  const pages = 5;
+  const pages = 25;
   const allRecords = [];
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: process.env.CHROME_BIN || null,
+    args: [
+      "--no-sandbox",
+      "--headless",
+      "--disable-gpu",
+      "--disable-dev-shm-usage",
+    ],
+  });
   const page = await browser.newPage();
   for (let i = 1; i <= pages; i++) {
     const url = house
@@ -57,29 +64,21 @@ export const scrapePageHandler = async (req, res) => {
       : `https://www.sreality.cz/en/search/for-sale/apartments?page=${i}`;
 
     await page.goto(url);
-    await page.screenshot({ path: "aha.png" });
-    const a = await page.evaluate(() => {
+    const results = await page.evaluate(() => {
       return Array.from(document.querySelectorAll(".property")).map((node) => {
-        return node.querySelector("img");
-      });
-    });
-    const arr = [];
-    const results = await page.$$eval(".property", (nodes) => {
-      const info = [];
-      nodes.forEach((node) => {
-        info.push([
+        let price = node
+          .querySelector(".norm-price")
+          .innerHTML.replace(/&nbsp;/g, "")
+          .replace("CZK", "");
+        if (isNaN(price)) {
+          price = null;
+        }
+        return [
           node.querySelector(".name").innerText,
           node.querySelector("img").src,
-          parseInt(
-            node
-              .querySelector(".norm-price")
-              .innerHTML.replaceAll("&nbsp;", "")
-              .replace("CZK", "")
-          ),
-        ]);
+          price,
+        ];
       });
-
-      return info;
     });
     allRecords.push(...results);
   }

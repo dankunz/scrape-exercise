@@ -10,7 +10,6 @@ import helmet from "helmet";
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-console.log("works?", PORT);
 app.use(cors());
 
 app.use(express.json());
@@ -22,8 +21,6 @@ app.use("/", (req, res) => {
 });
 
 const server = app.listen(PORT, async () => {
-  console.log(PORT);
-
   console.log(`App is running at port: ${PORT}`);
 });
 
