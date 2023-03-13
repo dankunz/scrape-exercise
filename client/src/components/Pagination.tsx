@@ -5,7 +5,7 @@ type PaginationProps = {
   currentPage: number;
   recordCount: number;
   limit: number;
-  onPageChange: (a: number) => void;
+  onPageChange: (_: number) => void;
 };
 export default function Pagination({
   currentPage,

@@ -21,7 +21,6 @@ export const getAdvertisementsHandler = async (req, res) => {
       `SELECT * from advertisements LIMIT ${limit} OFFSET ${offset};`,
       (error, results) => {
         if (error) throw error;
-        console.log("Get data rows count", count);
         res.status(200).json({ rows: results.rows, count });
       }
     );
@@ -52,7 +51,7 @@ export const scrapePageHandler = async (req, res) => {
   console.log("Deleting Old");
   await deleteAll();
   const house = req.query.type === "house";
-  const pages = 25;
+  const pages = 10;
   const allRecords = [];
   const browser = await puppeteer.launch({
     headless: true,
