@@ -37,16 +37,22 @@ const storeAdvertisementsToDB = async (values) => {
     )
   );
 };
-export const deleteDataHandler = (req, res) => {
-  pool.query(deleteAdvertisements, (err, result) => {
-    if (err) throw err;
-    res.status(200).json({ success: true });
+
+const deleteAll = async () => {
+  await pool.query(deleteAdvertisements, (err, result) => {
+    console.log("Deleted");
   });
+};
+export const deleteDataHandler = async (req, res) => {
+  await deleteAll();
+  res.status(200).json({ success: true });
 };
 
 export const scrapePageHandler = async (req, res) => {
+  console.log("Deleting Old");
+  await deleteAll();
   const house = req.query.type === "house";
-  const pages = 10;
+  const pages = 25;
   const allRecords = [];
   const browser = await puppeteer.launch({
     headless: true,
@@ -60,31 +66,41 @@ export const scrapePageHandler = async (req, res) => {
   });
   const page = await browser.newPage();
 
-  for (let i = 1; i <= 25; i++) {
+  for (let i = 1; i <= pages; i++) {
+    console.log(`Page ${i} of ${pages}`);
     const url = house
       ? `https://www.sreality.cz/en/search/for-sale/houses?page=${i}`
       : `https://www.sreality.cz/en/search/for-sale/apartments?page=${i}`;
 
     await page.goto(url, {
       waitUntil: "load",
-      timeout: 100000,
+      timeout: 500000,
     });
     const results = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".property")).map((node) => {
-        let price = node
-          .querySelector(".norm-price")
-          .innerHTML.replace(/&nbsp;/g, "")
-          .replace("CZK", "");
-        if (isNaN(price)) {
-          price = null;
-        }
-        return [
-          node.querySelector(".name").innerText,
-          node.querySelector("img").src,
-          price,
-        ];
-      });
+      try {
+        return Array.from(document.querySelectorAll(".property")).map(
+          (node) => {
+            let price = node
+              .querySelector(".norm-price")
+              .innerHTML.replace(/&nbsp;/g, "")
+              .replace("CZK", "");
+            if (isNaN(price)) {
+              price = null;
+            }
+            const a = [
+              node.querySelector(".name").innerText,
+              node.querySelector("img").src,
+              price,
+            ];
+            console.log(a);
+            return a;
+          }
+        );
+      } catch (e) {
+        console.log("Catched Error", e);
+      }
     });
+
     allRecords.push(...results);
   }
   console.log("before browser close");
@@ -92,7 +108,7 @@ export const scrapePageHandler = async (req, res) => {
   console.log("before after close");
 
   await storeAdvertisementsToDB(allRecords);
-  console.log("await after storeAdvertisementsToDB(al");
+  console.log("await after store");
 
   res.status(200).json(true);
 };

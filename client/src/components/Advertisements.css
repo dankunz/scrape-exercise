@@ -45,9 +45,11 @@
 }
 
 .loading-bars-wrapper {
-    position: absolute;
+    position: fixed;
     width: 100%;
-    height: 100%;
     background: rgb(151 151 151 / 70%);
+    left: 0;
+    top: 0;
+    bottom: 0;
 }
 
