@@ -3,22 +3,24 @@
     margin: 2rem;
 }
 .pagination-item {
-    background-color: #3a3aee;;
+    background-color: #816b6b;
     border-radius: 5px;
-    border: 1px solid #3a3aee;
+    border: 1px solid #816b6b;
     min-width: 1rem;
-    height: 1rem;
     padding: 0.3rem;
     margin: 0.2rem;
     cursor: pointer;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .pagination-item:hover {
-    color: #3a3aee;;
+    color: #816b6b;
     background-color: white;
 
 }
 .active {
-    color: #3a3aee;;
+    color: #816b6b;
     background-color: white;
 }

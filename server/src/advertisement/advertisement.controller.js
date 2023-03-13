@@ -2,6 +2,7 @@ import pool from "../../db.js";
 import {
   getAdvertisements,
   deleteAdvertisements,
+  getAdvertisementsCount,
 } from "./advertisment.queries.js";
 
 import axios from "axios";
@@ -10,42 +11,42 @@ import puppeteer from "puppeteer";
 import format from "pg-format";
 
 export const getAdvertisementsHandler = async (req, res) => {
-  const limit = req.query.limit;
-  const currentPage = req.query.currentPage;
-  const offset = currentPage * limit;
-  const countResponse = await pool.query(
-    "SELECT COUNT(*) FROM advertisements;"
-  );
-  const count = countResponse.rows[0].count;
-  const advertisements = pool.query(
-    `SELECT * from advertisements LIMIT ${limit} OFFSET ${offset};`,
-    (error, results) => {
-      if (error) throw error;
-      res.status(200).json({ rows: results.rows, count });
-    }
-  );
+  try {
+    const limit = req.query.limit;
+    const currentPage = req.query.currentPage;
+    const offset = currentPage * limit;
+    const countResponse = await pool.query(getAdvertisementsCount);
+    const count = countResponse.rows[0].count;
+    await pool.query(
+      `SELECT * from advertisements LIMIT ${limit} OFFSET ${offset};`,
+      (error, results) => {
+        if (error) throw error;
+        console.log("Get data rows count", count);
+        res.status(200).json({ rows: results.rows, count });
+      }
+    );
+  } catch (e) {
+    console.log("get datae", e);
+  }
 };
-const storeAdvertisementsToDB = (values) => {
-  pool.query(
+const storeAdvertisementsToDB = async (values) => {
+  await pool.query(
     format(
       "INSERT INTO advertisements (title, image_url, price) VALUES %L",
       values
-    ),
-    [],
-    (err, result) => {
-      console.log("stored");
-    }
+    )
   );
 };
 export const deleteDataHandler = (req, res) => {
   pool.query(deleteAdvertisements, (err, result) => {
+    if (err) throw err;
     res.status(200).json({ success: true });
   });
 };
 
 export const scrapePageHandler = async (req, res) => {
   const house = req.query.type === "house";
-  const pages = 25;
+  const pages = 10;
   const allRecords = [];
   const browser = await puppeteer.launch({
     headless: true,
@@ -58,12 +59,16 @@ export const scrapePageHandler = async (req, res) => {
     ],
   });
   const page = await browser.newPage();
-  for (let i = 1; i <= pages; i++) {
+
+  for (let i = 1; i <= 25; i++) {
     const url = house
       ? `https://www.sreality.cz/en/search/for-sale/houses?page=${i}`
       : `https://www.sreality.cz/en/search/for-sale/apartments?page=${i}`;
 
-    await page.goto(url);
+    await page.goto(url, {
+      waitUntil: "load",
+      timeout: 100000,
+    });
     const results = await page.evaluate(() => {
       return Array.from(document.querySelectorAll(".property")).map((node) => {
         let price = node
@@ -82,8 +87,12 @@ export const scrapePageHandler = async (req, res) => {
     });
     allRecords.push(...results);
   }
-  await browser.close();
-  storeAdvertisementsToDB(allRecords);
-  //Save To DB
-  res.status(200).json(allRecords);
+  console.log("before browser close");
+  //await browser.close();
+  console.log("before after close");
+
+  await storeAdvertisementsToDB(allRecords);
+  console.log("await after storeAdvertisementsToDB(al");
+
+  res.status(200).json(true);
 };

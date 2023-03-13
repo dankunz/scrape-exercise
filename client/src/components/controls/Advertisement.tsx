@@ -15,7 +15,7 @@ export default function Advertisment({ item }: { item: AdvertisementType }) {
     <div key={item.id} className="advertisement">
       <img src={item.image_url} alt="" />
       <div className="text-info">
-        <div className="title">{item.title}</div>
+        <div className="item-title">{item.title}</div>
         <div className="price">{price || "Not specified"}</div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 body {
   margin: 0;
-  background-color: #5e5e5e;
 }
 
 .app {
@@ -11,55 +10,29 @@ body {
   justify-content: center;
   text-align: center;
   font-family: sans-serif;
+  background-color: rgb(212,212,212);
 }
 .content {
-  margin: 3rem 0 3rem 0;
-
-  width: 80%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
   min-height: 30rem;
   border-radius: 3px;
-  background-color: white;
-
 }
-/* body {
-  height: 100vh;
-}
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  height: 100%;
-
-  padding: 2rem;
-  text-align: center;
-}
- */
-
-
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  width: 16rem;
+  font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  border: 1px solid transparent;
+  background-color: #816b6b;
   cursor: pointer;
-  transition: border-color 0.25s;
+  color: white
 }
 button:hover {
-  border-color: #646cff;
+  border-color: white;
+}
+.sreality {
+  width: 16rem;
 }
 
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}

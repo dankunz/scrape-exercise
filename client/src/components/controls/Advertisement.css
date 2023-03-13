@@ -4,6 +4,7 @@
     background-color: #dedede;
     border-radius: 5px;
     margin: 1rem;
+    border: 10px solid white;
 }
 img {
     width: 100%;
@@ -11,8 +12,7 @@ img {
     border-radius: 10px 10px 0 0;
 }
 .title {
-    font-weight: 700;
-    color: #3a3aee;
+    font-weight: 600;
 }
 .price {
     font-style: italic;

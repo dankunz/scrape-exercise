@@ -4,6 +4,8 @@ services:
     image: "postgres:latest"
     environment:
       - POSTGRES_PASSWORD=postgres_password
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
   nginx:
     depends_on:
       - api

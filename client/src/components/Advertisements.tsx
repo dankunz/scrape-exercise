@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Advertisement from "./controls/Advertisement";
-import Pagianation from "./controls/Pagination";
+import Pagianation from "./Pagination";
 import "./Advertisements.css";
 import { Bars } from "react-loader-spinner";
 import axios from "axios";
@@ -16,12 +16,14 @@ export default function Advertisements() {
   const [isLoading, setIsloading] = useState<boolean>(false);
 
   const fetchData = () => {
+    console.log("fetching Data");
     setIsloading(true);
     axios
       .get(`${API_URL}advertisement?currentPage=${currentPage}&limit=${limit}`)
       .then((res) => {
         setData(res.data.rows);
         setTotalCount(res.data.count);
+        console.log("fetching Data then");
       })
       .finally(() => setIsloading(false));
   };
@@ -34,6 +36,7 @@ export default function Advertisements() {
 
     axios
       .post(`${API_URL}advertisement/scrapePage?type=${type}`)
+      .catch((e) => console.log("error scrapePage", e))
       .finally(() => {
         setIsloading(false);
         fetchData();
@@ -53,6 +56,7 @@ export default function Advertisements() {
         <button onClick={deleteData}>Delete data</button>
         <select
           onChange={(e) => {
+            setCurrentPage(0);
             setLimit(Number(e.target.value));
           }}
           className="per-page-select"
@@ -64,16 +68,19 @@ export default function Advertisements() {
           ))}
         </select>
       </div>
-
-      <Bars
-        height="80"
-        width="80"
-        color="#3a3aee"
-        ariaLabel="bars-loading"
-        wrapperStyle={{ marginTop: "5rem" }}
-        wrapperClass=""
-        visible={isLoading}
-      />
+      {isLoading && (
+        <div className="loading-bars-wrapper">
+          <Bars
+            height="80"
+            width="80"
+            color="#4d3737"
+            ariaLabel="bars-loading"
+            wrapperStyle={{ position: "absolute", top: "50%", left: "50%" }}
+            wrapperClass=""
+            visible={isLoading}
+          />
+        </div>
+      )}
       <div className="advertisements">
         {data.map((item: AdvertisementType) => {
           return <Advertisement key={`advertisement-${item.id}`} item={item} />;

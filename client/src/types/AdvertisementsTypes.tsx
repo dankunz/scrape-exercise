@@ -4,5 +4,3 @@ export type AdvertisementType = {
   image_url: string;
   price: number;
 };
-
-export default "2";

@@ -1,5 +1,5 @@
 import React from "react";
-
+import "./Title.css";
 export default function Title({ children }: { children: any }) {
-  return <h1>{children}</h1>;
+  return <span className="title">{children}</span>;
 }
