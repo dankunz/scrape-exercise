@@ -17,5 +17,6 @@ app.use("/", (req, res) => {
 });
 
 const server = app.listen(PORT, async () => {
-  console.log(`App is running at port: ${PORT}`);
+  console.log(`Server is running at port: ${PORT}`);
+  console.log(`Please wait until a database is established...`);
 });
