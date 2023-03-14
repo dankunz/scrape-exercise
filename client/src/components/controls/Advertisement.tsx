@@ -1,7 +1,7 @@
-import React from "react";
 import "./Advertisement.css";
-import image from "../../assets/example.jpeg";
+
 import { AdvertisementType } from "../../types/AdvertisementsTypes";
+import React from "react";
 
 export default function Advertisment({ item }: { item: AdvertisementType }) {
   const price =

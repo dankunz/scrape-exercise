@@ -1,5 +1,5 @@
-import React from "react";
 import PaginationItem from "./controls/PaginationItem";
+import React from "react";
 
 type PaginationProps = {
   currentPage: number;
@@ -16,7 +16,7 @@ export default function Pagination({
   const pages = [...Array(Math.round(recordCount / limit)).keys()];
   return (
     <div className="pagiantion-items">
-      {pages.map((p) => (
+      {pages.map((p: number) => (
         <PaginationItem
           key={p}
           onPageChange={onPageChange}

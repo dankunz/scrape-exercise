@@ -1,12 +1,20 @@
-import React, { useEffect, useState } from "react";
-import Advertisement from "./controls/Advertisement";
-import Pagianation from "./Pagination";
 import "./Advertisements.css";
-import { Bars } from "react-loader-spinner";
-import axios from "axios";
-import { AdvertisementType } from "../types/AdvertisementsTypes";
-const perPageOptions = [{ value: 20 }, { value: 50 }, { value: 100 }];
 
+import React, { useEffect, useState } from "react";
+
+import Advertisement from "./controls/Advertisement";
+import { AdvertisementType } from "../types/AdvertisementsTypes";
+import { Bars } from "react-loader-spinner";
+import Pagianation from "./Pagination";
+import axios from "axios";
+
+const perPageOptions = [{ value: 20 }, { value: 50 }, { value: 100 }];
+type GetDataResponse = {
+  data: {
+    rows: AdvertisementType[];
+    count: number;
+  };
+};
 const API_URL = "/api/v1/";
 export default function Advertisements() {
   const [data, setData] = useState<AdvertisementType[]>([]);
@@ -20,10 +28,9 @@ export default function Advertisements() {
     setIsloading(true);
     axios
       .get(`${API_URL}advertisement?currentPage=${currentPage}&limit=${limit}`)
-      .then((res) => {
-        setData(res.data.rows);
-        setTotalCount(res.data.count);
-        console.log("fetching Data then");
+      .then((response: GetDataResponse) => {
+        setData(response.data.rows);
+        setTotalCount(response.data.count);
       })
       .finally(() => setIsloading(false));
   };
@@ -44,7 +51,7 @@ export default function Advertisements() {
   }
   function deleteData() {
     console.log("scrapeData");
-    axios.post(`${API_URL}advertisement/deleteData`).then((data) => {
+    axios.post(`${API_URL}advertisement/deleteData`).then(() => {
       fetchData();
     });
   }

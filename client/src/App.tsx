@@ -1,7 +1,8 @@
-import HomePage from "./pages/HomePage";
 import "./index.css";
+
+import HomePage from "./pages/HomePage";
+
 function App() {
-  console.log(import.meta.env);
   return (
     <div className="app">
       <div className="content">
