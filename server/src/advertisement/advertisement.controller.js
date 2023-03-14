@@ -1,12 +1,9 @@
 import pool from "../../db.js";
 import {
-  getAdvertisements,
   deleteAdvertisements,
   getAdvertisementsCount,
 } from "./advertisment.queries.js";
 
-import axios from "axios";
-import cheerio from "cheerio";
 import puppeteer from "puppeteer";
 import format from "pg-format";
 
@@ -86,13 +83,12 @@ export const scrapePageHandler = async (req, res) => {
             if (isNaN(price)) {
               price = null;
             }
-            const a = [
+
+            return [
               node.querySelector(".name").innerText,
               node.querySelector("img").src,
               price,
             ];
-            console.log(a);
-            return a;
           }
         );
       } catch (e) {
