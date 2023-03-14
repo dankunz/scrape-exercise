@@ -99,7 +99,7 @@ export const scrapePageHandler = async (req, res) => {
                   })
             );
         } catch (e) {
-          console.log(`Data from this page: ${i}, could not loaded`);
+          console.log(`Data from page: ${i}, could not be loaded`);
         }
       }
     });
