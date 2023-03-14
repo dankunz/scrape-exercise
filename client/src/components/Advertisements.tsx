@@ -24,7 +24,6 @@ export default function Advertisements() {
   const [isLoading, setIsloading] = useState<boolean>(false);
 
   const fetchData = () => {
-    console.log("fetching Data");
     setIsloading(true);
     axios
       .get(`${API_URL}advertisement?currentPage=${currentPage}&limit=${limit}`)
@@ -50,7 +49,6 @@ export default function Advertisements() {
       });
   }
   function deleteData() {
-    console.log("scrapeData");
     axios.post(`${API_URL}advertisement/deleteData`).then(() => {
       fetchData();
     });

@@ -14,7 +14,7 @@ export const getAdvertisementsHandler = async (req, res) => {
     const offset = currentPage * limit;
     const countResponse = await pool.query(getAdvertisementsCount);
     const count = countResponse.rows[0].count;
-    await pool.query(
+    pool.query(
       `SELECT * from advertisements LIMIT ${limit} OFFSET ${offset};`,
       (error, results) => {
         if (error) throw error;
@@ -22,7 +22,7 @@ export const getAdvertisementsHandler = async (req, res) => {
       }
     );
   } catch (e) {
-    console.log("Database is not preperad yet please reset docker", e);
+    console.log("Database was not preperad yet please reset docker", e);
   }
 };
 const storeAdvertisementsToDB = async (values) => {
@@ -35,9 +35,7 @@ const storeAdvertisementsToDB = async (values) => {
 };
 
 const deleteAll = async () => {
-  await pool.query(deleteAdvertisements, (err, result) => {
-    console.log("Deleted");
-  });
+  await pool.query(deleteAdvertisements);
 };
 export const deleteDataHandler = async (req, res) => {
   await deleteAll();
@@ -76,10 +74,8 @@ export const scrapePageHandler = async (req, res) => {
 
           await page
             .evaluate(() => {
-              console.log("in evaluate");
               return Array.from(document.querySelectorAll(".property")).map(
                 (node) => {
-                  console.log("node", node);
                   let price = node
                     .querySelector(".norm-price")
                     .innerHTML.replace(/&nbsp;/g, "")
@@ -100,7 +96,7 @@ export const scrapePageHandler = async (req, res) => {
               allRecords.push(...results);
             });
         } catch (e) {
-          console.log("Data cannot be loaded");
+          console.log(`Data from this page: ${i}, could not loaded`);
         }
       }
     });
