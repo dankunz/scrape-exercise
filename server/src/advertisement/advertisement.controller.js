@@ -68,33 +68,36 @@ export const scrapePageHandler = async (req, res) => {
 
         const page = await browser.newPage();
         try {
-          await page.goto(url, {
-            waitUntil: "load",
-          });
-
           await page
-            .evaluate(() => {
-              return Array.from(document.querySelectorAll(".property")).map(
-                (node) => {
-                  let price = node
-                    .querySelector(".norm-price")
-                    .innerHTML.replace(/&nbsp;/g, "")
-                    .replace("CZK", "");
-                  if (isNaN(price)) {
-                    price = null;
-                  }
-
-                  return [
-                    node.querySelector(".name").innerText,
-                    node.querySelector("img").src,
-                    price,
-                  ];
-                }
-              );
+            .goto(url, {
+              waitUntil: "load",
             })
-            .then((results) => {
-              allRecords.push(...results);
-            });
+            .then(
+              async () =>
+                await page
+                  .evaluate(() => {
+                    return Array.from(
+                      document.querySelectorAll(".property")
+                    ).map((node) => {
+                      let price = node
+                        .querySelector(".norm-price")
+                        .innerHTML.replace(/&nbsp;/g, "")
+                        .replace("CZK", "");
+                      if (isNaN(price)) {
+                        price = null;
+                      }
+
+                      return [
+                        node.querySelector(".name").innerText,
+                        node.querySelector("img").src,
+                        price,
+                      ];
+                    });
+                  })
+                  .then((results) => {
+                    allRecords.push(...results);
+                  })
+            );
         } catch (e) {
           console.log(`Data from this page: ${i}, could not loaded`);
         }
