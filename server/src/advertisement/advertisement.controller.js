@@ -22,7 +22,7 @@ export const getAdvertisementsHandler = async (req, res) => {
       }
     );
   } catch (e) {
-    console.log("get datae", e);
+    console.log("Database is not preperad yet please reset docker", e);
   }
 };
 const storeAdvertisementsToDB = async (values) => {
